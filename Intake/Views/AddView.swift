@@ -8,10 +8,26 @@
 import SwiftUI
 
 struct AddView: View {
+    
+    @State private var name = ""
+    @State private var calories = ""
+    @State private var servings = ""
+    
+    @State private var userInput = ""
+    @State private var userNumber = 1
+    
     var body: some View {
         NavigationView {
-            VStack {
-                
+            Form {
+                Section {
+                    TextField("Name", text: $name)
+                }
+                Section {
+                    TextField("Servings", text: $servings)
+                        .keyboardType(.decimalPad)
+                    TextField("Calories", text: $calories)
+                        .keyboardType(.decimalPad)
+                }
             }
             .navigationTitle("Add")
         }
