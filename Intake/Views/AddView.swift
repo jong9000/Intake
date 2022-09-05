@@ -11,10 +11,8 @@ struct AddView: View {
     
     @State private var name = ""
     @State private var calories = ""
-    @State private var servings = ""
+    @State private var servings: Int = 1
     
-    @State private var userInput = ""
-    @State private var userNumber = 1
     
     var body: some View {
         NavigationView {
@@ -23,10 +21,12 @@ struct AddView: View {
                     TextField("Name", text: $name)
                 }
                 Section {
-                    TextField("Servings", text: $servings)
+                    Stepper("Servings: \(servings)", value: $servings, in: 0...100)
+                    TextField("Calories per serving", text: $calories)
                         .keyboardType(.decimalPad)
-                    TextField("Calories", text: $calories)
-                        .keyboardType(.decimalPad)
+                }
+                Section {
+                    Text("Total calories: \(servings * (Int(calories) ?? 0))")
                 }
             }
             .navigationTitle("Add")
