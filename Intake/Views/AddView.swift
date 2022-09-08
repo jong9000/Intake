@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct AddView: View {
+    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.dismiss) private var dismiss
     
     @State private var name = ""
     @State private var calories = ""
@@ -28,8 +30,36 @@ struct AddView: View {
                 Section {
                     Text("Total calories: \(servings * (Int(calories) ?? 0))")
                 }
+                HStack {
+                    Spacer()
+                    Button("Submit") {
+                        addItem()
+                        dismiss()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    Spacer()
+                }
+
             }
             .navigationTitle("Add")
+        }
+    }
+    
+    private func addItem() {
+        withAnimation {
+            let newItem = Item(context: viewContext)
+            newItem.timestamp = Date()
+            newItem.calories = Int16(servings * (Int(calories) ?? 0))
+            newItem.title = name
+            
+            do {
+                try viewContext.save()
+            } catch {
+                // Replace this implementation with code to handle the error appropriately.
+                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
         }
     }
 }
