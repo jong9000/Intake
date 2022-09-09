@@ -12,7 +12,7 @@ struct ListView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
+        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: false)],
         animation: .default)
     private var items: FetchedResults<Item>
     
@@ -20,25 +20,25 @@ struct ListView: View {
         NavigationView {
             List {
                 ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                    } label: {
+                    HStack {
+                        Text("\(item.title ?? "name"): \(String(item.calories))")
                         Text(item.timestamp!, formatter: itemFormatter)
                     }
+
                 }
                 .onDelete(perform: deleteItems)
             }
             .navigationTitle("List")
-//            .toolbar {
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    EditButton()
-//                }
-//                ToolbarItem {
-//                    Button(action: addItem) {
-//                        Label("Add Item", systemImage: "plus")
-//                    }
-//                }
-//            }
+            //            .toolbar {
+            //                ToolbarItem(placement: .navigationBarTrailing) {
+            //                    EditButton()
+            //                }
+            //                ToolbarItem {
+            //                    Button(action: addItem) {
+            //                        Label("Add Item", systemImage: "plus")
+            //                    }
+            //                }
+            //            }
         }
     }
     
@@ -75,15 +75,10 @@ struct ListView: View {
     
 }
 
+
 private let itemFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.dateStyle = .short
     formatter.timeStyle = .medium
     return formatter
 }()
-
-struct ListView_Previews: PreviewProvider {
-    static var previews: some View {
-        ListView()
-    }
-}

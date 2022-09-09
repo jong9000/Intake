@@ -8,24 +8,31 @@
 import SwiftUI
 
 struct AddView: View {
+    private enum Field {
+        case name
+        case calories
+    }
+    
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
     
     @State private var name = ""
     @State private var calories = ""
     @State private var servings: Int = 1
-    
+    @FocusState private var focusedField: Field?
     
     var body: some View {
         NavigationView {
             Form {
                 Section {
                     TextField("Name", text: $name)
-                }
-                Section {
-                    Stepper("Servings: \(servings)", value: $servings, in: 0...100)
+                        .focused($focusedField, equals: .name)
+                        .submitLabel(.next)
                     TextField("Calories per serving", text: $calories)
-                        .keyboardType(.decimalPad)
+//                        .keyboardType(.decimalPad)
+                        .focused($focusedField, equals: .calories)
+                        .submitLabel(.next)
+                    Stepper("Servings: \(servings)", value: $servings, in: 0...100)
                 }
                 Section {
                     Text("Total calories: \(servings * (Int(calories) ?? 0))")
@@ -39,7 +46,17 @@ struct AddView: View {
                     .buttonStyle(.borderedProminent)
                     Spacer()
                 }
-
+                
+                .onSubmit {
+                    switch focusedField {
+                    case .name:
+                        print("name was focused")
+                        focusedField = .calories
+                    default:
+                        focusedField = .calories
+                    }
+                }
+                
             }
             .navigationTitle("Add")
         }
