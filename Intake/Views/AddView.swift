@@ -29,24 +29,11 @@ struct AddView: View {
                         .focused($focusedField, equals: .name)
                         .submitLabel(.next)
                     TextField("Calories per serving", text: $calories)
-//                        .keyboardType(.decimalPad)
+                        .keyboardType(.decimalPad)
                         .focused($focusedField, equals: .calories)
-                        .submitLabel(.next)
                     Stepper("Servings: \(servings)", value: $servings, in: 0...100)
+                        .focused($focusedField, equals: nil)
                 }
-                Section {
-                    Text("Total calories: \(servings * (Int(calories) ?? 0))")
-                }
-                HStack {
-                    Spacer()
-                    Button("Submit") {
-                        addItem()
-                        dismiss()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    Spacer()
-                }
-                
                 .onSubmit {
                     switch focusedField {
                     case .name:
@@ -56,7 +43,23 @@ struct AddView: View {
                         focusedField = .calories
                     }
                 }
-                
+                Section {
+                    Text("Total calories: \(servings * (Int(calories) ?? 0))")
+                }
+                HStack {
+                    Spacer()
+                    Button("Submit") {
+                        addItem()
+                        
+                        name = ""
+                        calories = ""
+                        servings = 1
+                        focusedField = nil
+                        
+                    }
+                    .buttonStyle(.borderedProminent)
+                    Spacer()
+                }
             }
             .navigationTitle("Add")
         }
