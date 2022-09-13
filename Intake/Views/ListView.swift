@@ -21,10 +21,15 @@ struct ListView: View {
             List {
                 ForEach(items) { item in
                     HStack {
-                        Text("\(item.title ?? "name"): \(String(item.calories))")
-                        Text(item.timestamp!, formatter: itemFormatter)
+                        NavigationLink {
+                            Text(item.timestamp!, formatter: itemFormatter)
+                        } label: {
+                            Text("\(item.title ?? "name")")
+                            Spacer()
+                            Text(String(item.calories))
+                                .foregroundColor(.red)
+                        }
                     }
-
                 }
                 .onDelete(perform: deleteItems)
             }
