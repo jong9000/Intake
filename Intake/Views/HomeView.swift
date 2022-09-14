@@ -8,13 +8,22 @@
 import SwiftUI
 
 struct HomeView: View {
+    
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: false)],
+     animation: .default)
+    private var items: FetchedResults<Item>
+    
     var body: some View {
         NavigationView {
             VStack {
-                
+                Text(totalCaloriesForToday())
             }
             .navigationTitle("Home")
         }
+    }
+    
+    private func totalCaloriesForToday() -> String {
+        return "Hello World"
     }
 }
 
