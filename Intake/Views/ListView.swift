@@ -20,10 +20,11 @@ struct ListView: View {
         NavigationView {
             List {
                 ForEach(items) { item in
-                    HStack {
-                        NavigationLink {
-                            Text(item.timestamp!, formatter: itemFormatter)
-                        } label: {
+                    
+                    NavigationLink {
+                        Text(item.timestamp!, formatter: itemFormatter)
+                    } label: {
+                        HStack {
                             Text("\(item.title ?? "name")")
                             Spacer()
                             Text(String(item.calories))
@@ -46,7 +47,7 @@ struct ListView: View {
             //            }
         }
     }
-        
+    
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             offsets.map { items[$0] }.forEach(viewContext.delete)
