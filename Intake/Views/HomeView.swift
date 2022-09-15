@@ -10,21 +10,30 @@ import SwiftUI
 struct HomeView: View {
     
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: false)],
-     animation: .default)
+                  animation: .default)
     private var items: FetchedResults<Item>
     
     var body: some View {
         NavigationView {
             VStack {
                 Text(totalCaloriesForToday())
+                    .foregroundColor(.secondary)
             }
             .navigationTitle("Home")
         }
     }
     
     private func totalCaloriesForToday() -> String {
-        return "Hello World"
+        var totalCalories: Int16 = 0
+        
+        for item in items {
+            totalCalories += item.calories
+        }
+        
+        return "\(totalCalories)"
     }
+    
+    
 }
 
 struct HomeView_Previews: PreviewProvider {
@@ -32,3 +41,4 @@ struct HomeView_Previews: PreviewProvider {
         HomeView()
     }
 }
+
