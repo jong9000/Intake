@@ -15,9 +15,33 @@ struct HomeView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                Text(totalCaloriesForToday())
-                    .foregroundColor(.secondary)
+            ScrollView {
+                Spacer()
+                VStack {
+                    Text("Calories for Today")
+                        .font(.title)
+                        .padding(24)
+                    Text(totalCaloriesForToday())
+                        .font(.largeTitle)
+                    Spacer()
+                }
+                .frame(width: 300, height: 160, alignment: .center)
+                .background(Gradient(colors: [.red, .blue]))
+                .cornerRadius(20)
+                
+                
+                VStack {
+                    Text("Calories Yesterday")
+                        .font(.title)
+                        .padding(24)
+                    Text("2000")
+                        .font(.largeTitle)
+                    Spacer()
+                }
+                .frame(width: 300, height: 160, alignment: .center)
+                .background(Gradient(colors: [.red, .blue]))
+                .cornerRadius(20)
+
             }
             .navigationTitle("Home")
         }
