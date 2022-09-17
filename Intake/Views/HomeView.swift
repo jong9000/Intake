@@ -9,9 +9,11 @@ import SwiftUI
 
 struct HomeView: View {
     
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: false)],
+    @FetchRequest(
+                sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: false)],
+                predicate: NSPredicate(format: "timestamp > %@", UserCalendar().startOfDay as NSDate),
                   animation: .default)
-    private var items: FetchedResults<Item>
+    private var todaysItems: FetchedResults<Item>
     
     var body: some View {
         NavigationView {
@@ -21,27 +23,26 @@ struct HomeView: View {
                     .ignoresSafeArea()
                 
                 ScrollView(showsIndicators: false) {
-                    CalorieTotalView(title: "today", amount: "1000")
-                    CalorieTotalView(title: "yesterday", amount: "2500")
-                    CalorieTotalView(title: "day before that", amount: "1900")
-                    CalorieTotalView(title: "day before that", amount: "2300")
+                    CalorieTotalView(title: "today", amount: totalCaloriesForToday())
+                    CalorieTotalView(title: "yesterday", amount: "0")
+                    CalorieTotalView(title: "day before that", amount: "0")
+                    CalorieTotalView(title: "day before that", amount: "0")
                 }
                 .navigationTitle("Home")
             }
         }
     }
     
-//    private func totalCaloriesForToday() -> String {
-//        var totalCalories: Int16 = 0
-//
-//        for item in items {
-//            totalCalories += item.calories
-//        }
-//
-//        return "\(totalCalories)"
-//    }
-    
-    
+    private func totalCaloriesForToday() -> String {
+        var totalCalories: Int16 = 0
+
+        for item in todaysItems {
+            totalCalories += item.calories
+        }
+
+        return "\(totalCalories)"
+    }
+
 }
 
 struct HomeView_Previews: PreviewProvider {
@@ -50,3 +51,4 @@ struct HomeView_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
     }
 }
+
