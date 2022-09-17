@@ -15,47 +15,31 @@ struct HomeView: View {
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                Spacer()
-                VStack {
-                    Text("Calories for Today")
-                        .font(.title)
-                        .padding(24)
-                    Text(totalCaloriesForToday())
-                        .font(.largeTitle)
-                    Spacer()
-                }
-                .frame(width: 300, height: 160, alignment: .center)
-                .background(Gradient(colors: [.red, .blue]))
-                .cornerRadius(20)
+            ZStack {
+                LinearGradient(colors: [.red, .blue], startPoint: .bottomTrailing, endPoint: .topLeading)
+                    .opacity(0.7)
+                    .ignoresSafeArea()
                 
-                
-                VStack {
-                    Text("Calories Yesterday")
-                        .font(.title)
-                        .padding(24)
-                    Text("2000")
-                        .font(.largeTitle)
-                    Spacer()
+                ScrollView(showsIndicators: false) {
+                    CalorieTotalView(title: "today", amount: "1000")
+                    CalorieTotalView(title: "yesterday", amount: "2500")
+                    CalorieTotalView(title: "day before that", amount: "1900")
+                    CalorieTotalView(title: "day before that", amount: "2300")
                 }
-                .frame(width: 300, height: 160, alignment: .center)
-                .background(Gradient(colors: [.red, .blue]))
-                .cornerRadius(20)
-
+                .navigationTitle("Home")
             }
-            .navigationTitle("Home")
         }
     }
     
-    private func totalCaloriesForToday() -> String {
-        var totalCalories: Int16 = 0
-        
-        for item in items {
-            totalCalories += item.calories
-        }
-        
-        return "\(totalCalories)"
-    }
+//    private func totalCaloriesForToday() -> String {
+//        var totalCalories: Int16 = 0
+//
+//        for item in items {
+//            totalCalories += item.calories
+//        }
+//
+//        return "\(totalCalories)"
+//    }
     
     
 }
@@ -63,6 +47,6 @@ struct HomeView: View {
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView()
+            .preferredColorScheme(.dark)
     }
 }
-
