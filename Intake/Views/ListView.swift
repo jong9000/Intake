@@ -12,27 +12,56 @@ struct ListView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: false)],
-        animation: .default)
-    private var items: FetchedResults<Item>
+                sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: false)],
+                predicate: NSPredicate(format: "timestamp > %@", UserCalendar().startOfDay as NSDate),
+                  animation: .default)
+    private var todaysItems: FetchedResults<Item>
+    
+    @FetchRequest(
+                sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: false)],
+                predicate: NSPredicate(format: "timestamp < %@", UserCalendar().startOfDay as NSDate),
+                  animation: .default)
+    private var previousItems: FetchedResults<Item>
     
     var body: some View {
         NavigationView {
             List {
-                ForEach(items) { item in
-                    
-                    NavigationLink {
-                        Text(item.timestamp!, formatter: itemFormatter)
-                    } label: {
-                        HStack {
-                            Text("\(item.title ?? "name")")
-                            Spacer()
-                            Text(String(item.calories))
-                                .foregroundColor(.red)
+                Section {
+                    ForEach(todaysItems) { item in
+                        
+                        NavigationLink {
+                            Text(item.timestamp!, formatter: itemFormatter)
+                        } label: {
+                            HStack {
+                                Text("\(item.title ?? "name")")
+                                Spacer()
+                                Text(String(item.calories))
+                                    .foregroundColor(.red)
+                            }
                         }
                     }
+                    .onDelete(perform: deleteItems)
+
+                } header: {
+                    Text("Today")
                 }
-                .onDelete(perform: deleteItems)
+                
+                Section {
+                    ForEach(previousItems) { item in
+                        NavigationLink {
+                            Text(item.timestamp!, formatter: itemFormatter)
+                        } label: {
+                            HStack {
+                                Text("\(item.title ?? "name")")
+                                Spacer()
+                                Text(String(item.calories))
+                                    .foregroundColor(.red)
+                            }
+                        }
+                    }
+                } header: {
+                    Text("Previous")
+                }
             }
             .navigationTitle("List")
             //            .toolbar {
@@ -50,7 +79,7 @@ struct ListView: View {
     
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
+            offsets.map { todaysItems[$0] }.forEach(viewContext.delete)
             
             do {
                 try viewContext.save()
