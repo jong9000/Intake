@@ -41,53 +41,23 @@ animation: .default)
                     .ignoresSafeArea()
                 
                 ScrollView(showsIndicators: false) {
-                    CalorieTotalView(title: "today", amount: totalCaloriesForToday())
-                    CalorieTotalView(title: "yesterday", amount: totalCaloriesForYesterday())
-                    CalorieTotalView(title: "day before that", amount: totalCaloriesForDayBeforeYesterday())
-                    CalorieTotalView(title: "day before that", amount: totalCaloriesForDayBeforeDayBeforeYesterday())
+                    CalorieTotalView(title: "today", amount: totalCaloriesForItems(in: todaysItems))
+                    CalorieTotalView(title: "yesterday", amount: totalCaloriesForItems(in: yesterdaysItems))
+                    CalorieTotalView(title: "day before that", amount: totalCaloriesForItems(in: dayBeforeYesterdaysItems))
+                    CalorieTotalView(title: "day before that", amount: totalCaloriesForItems(in: dayBeforeDayBeforeYesterdaysItems))
                 }
                 .navigationTitle("Home")
             }
         }
     }
     
-    private func totalCaloriesForToday() -> String {
+    private func totalCaloriesForItems(in itemResult: FetchedResults<Item>) -> String {
         var totalCalories: Int16 = 0
-
-        for item in todaysItems {
-            totalCalories += item.calories
-        }
-
-        return "\(totalCalories)"
-    }
-    
-    private func totalCaloriesForYesterday() -> String {
-        var totalCalories: Int16 = 0
-        
-        for item in yesterdaysItems {
+        for item in itemResult {
             totalCalories += item.calories
         }
         return "\(totalCalories)"
     }
-    
-    private func totalCaloriesForDayBeforeYesterday() -> String {
-        var totalCalories: Int16 = 0
-        
-        for item in dayBeforeYesterdaysItems {
-            totalCalories += item.calories
-        }
-        return "\(totalCalories)"
-    }
-    
-    private func totalCaloriesForDayBeforeDayBeforeYesterday() -> String {
-        var totalCalories: Int16 = 0
-        
-        for item in dayBeforeDayBeforeYesterdaysItems {
-            totalCalories += item.calories
-        }
-        return "\(totalCalories)"
-    }
-
 }
 
 struct HomeView_Previews: PreviewProvider {
@@ -95,14 +65,4 @@ struct HomeView_Previews: PreviewProvider {
         HomeView()
             .preferredColorScheme(.dark)
     }
-}
-
-struct IntakePredicate {
-    static let fromToday = NSPredicate(format: "timestamp >= %@", UserCalendar().startOfDay as NSDate)
-    static let tilToday = NSPredicate(format: "timestamp < %@", UserCalendar().startOfDay as NSDate)
-    static let fromYesterday = NSPredicate(format: "timestamp > %@", UserCalendar().startOfYesterday as NSDate)
-    static let tilYesterday = NSPredicate(format: "timestamp < %@", UserCalendar().startOfYesterday as NSDate)
-    static let fromDayBeforeYesterday = NSPredicate(format: "timestamp > %@", UserCalendar().startOfDayBeforeYesterday as NSDate)
-    static let tilDayBeforeYesterday = NSPredicate(format: "timestamp < %@", UserCalendar().startOfDayBeforeYesterday as NSDate)
-    static let fromDayBeforeDayBeforeYesterday = NSPredicate(format: "timestamp > %@", UserCalendar().startOfDayBeforeDayBeforeYesterday as NSDate)
 }
