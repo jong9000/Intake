@@ -19,7 +19,13 @@ struct ListView: View {
     
     @FetchRequest(
                 sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: false)],
-                predicate: NSPredicate(format: "timestamp < %@", UserCalendar().startOfDay as NSDate),
+                predicate: NSPredicate(format: "timestamp >= %@ && timestamp < %@", UserCalendar().startOfYesterday as NSDate, UserCalendar().startOfDay as NSDate),
+                  animation: .default)
+    private var yesterdaysItems: FetchedResults<Item>
+    
+    @FetchRequest(
+                sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: false)],
+                predicate: NSPredicate(format: "timestamp < %@", UserCalendar().startOfYesterday as NSDate),
                   animation: .default)
     private var previousItems: FetchedResults<Item>
     
@@ -44,6 +50,23 @@ struct ListView: View {
 
                 } header: {
                     Text("Today")
+                }
+                
+                Section {
+                    ForEach(yesterdaysItems) { item in
+                        NavigationLink {
+                            Text(item.timestamp!, formatter: itemFormatter)
+                        } label: {
+                            HStack {
+                                Text("\(item.title ?? "name")")
+                                Spacer()
+                                Text(String(item.calories))
+                                    .foregroundColor(.red)
+                            }
+                        }
+                    }
+                } header: {
+                    Text("Yesterday")
                 }
                 
                 Section {
