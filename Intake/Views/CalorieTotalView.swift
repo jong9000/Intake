@@ -36,8 +36,9 @@ struct CalorieTotalView: View {
     }
 }
 
-//struct CalorieTotalView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        CalorieTotalView()
-//    }
-//}
+struct CalorieTotalView_Previews: PreviewProvider {
+    static var previews: some View {
+        CalorieTotalView(title: "Today", amount: "100")
+            .preferredColorScheme(.dark)
+    }
+}
