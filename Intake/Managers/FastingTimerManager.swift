@@ -9,7 +9,7 @@ import Foundation
 
 final class FastingTimerManager: ObservableObject {
     
-    var totalMinutesElapsed = 118 {
+    var totalMinutesElapsed = 0 {
         didSet {
             if totalMinutesElapsed >= 60 {
                 hoursElapsed = totalMinutesElapsed / 60
