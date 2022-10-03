@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FastingTimerView: View {
-        
+    
     @FetchRequest(fetchRequest: Item.fetchLastItem) private var lastItem: FetchedResults<Item>
     
     var body: some View {
@@ -21,7 +21,7 @@ struct FastingTimerView: View {
                 Text(lastItem[0].timestamp ?? Date(), formatter: Date.itemFormatter)
                 Spacer()
                     .frame(height: 20)
-                Text("6 hours")
+                Text("hours go here")
                     .font(.largeTitle)
                 Text("12 minutes")
                     .foregroundColor(.secondary)

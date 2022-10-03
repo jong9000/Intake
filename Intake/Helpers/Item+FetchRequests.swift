@@ -11,7 +11,6 @@ extension Item {
     static var fetchLastItem: NSFetchRequest<Item> {
         let request: NSFetchRequest<Item> = Item.fetchRequest()
         request.fetchLimit = 1
-        request.predicate = nil
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Item.timestamp, ascending: false)]
         return request
     }
