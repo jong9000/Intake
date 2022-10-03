@@ -9,6 +9,8 @@ import SwiftUI
 
 struct FastingTimerView: View {
     
+    @EnvironmentObject var fastingTimer: FastingTimerManager
+    
     @FetchRequest(fetchRequest: Item.fetchLastItem) private var lastItem: FetchedResults<Item>
     
     var body: some View {
@@ -21,13 +23,12 @@ struct FastingTimerView: View {
                 Text(lastItem[0].timestamp ?? Date(), formatter: Date.itemFormatter)
                 Spacer()
                     .frame(height: 20)
-                Text("hours go here")
+                Text("\(fastingTimer.hoursElapsed)")
                     .font(.largeTitle)
-                Text("12 minutes")
+                Text("\(fastingTimer.minutesElapsed)")
                     .foregroundColor(.secondary)
                 Spacer()
                     .frame(height: 50)
-                
                 }
                 .frame(width: 300, height: 200)
                 .background(.ultraThinMaterial)

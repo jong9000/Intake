@@ -15,6 +15,7 @@ struct AddView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var fastingTimer: FastingTimerManager
     
     @State private var name = ""
     @State private var calories = ""
@@ -81,6 +82,7 @@ struct AddView: View {
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
         }
+        fastingTimer.startFast()
     }
 }
 
