@@ -41,6 +41,7 @@ animation: .default)
                     .ignoresSafeArea()
                 
                 ScrollView(showsIndicators: false) {
+                    FastingTimerView()
                     CalorieTotalView(title: "today", amount: totalCaloriesForItems(in: todaysItems))
                     CalorieTotalView(title: "yesterday", amount: totalCaloriesForItems(in: yesterdaysItems))
                     CalorieTotalView(title: "day before that", amount: totalCaloriesForItems(in: dayBeforeYesterdaysItems))

@@ -9,6 +9,8 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
+    @StateObject var fastingTimer = FastingTimerManager()
+    
     var body: some View {
         TabView {
             HomeView()
@@ -27,6 +29,7 @@ struct ContentView: View {
                     Text("List")
                 }
         }
+        .environmentObject(fastingTimer)
     }
 }
 

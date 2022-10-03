@@ -36,7 +36,7 @@ struct ListView: View {
                     ForEach(todaysItems) { item in
                         
                         NavigationLink {
-                            Text(item.timestamp!, formatter: itemFormatter)
+                            Text(item.timestamp!, formatter: Date.itemFormatter)
                         } label: {
                             HStack {
                                 Text("\(item.title ?? "name")")
@@ -55,7 +55,7 @@ struct ListView: View {
                 Section {
                     ForEach(yesterdaysItems) { item in
                         NavigationLink {
-                            Text(item.timestamp!, formatter: itemFormatter)
+                            Text(item.timestamp!, formatter: Date.itemFormatter)
                         } label: {
                             HStack {
                                 Text("\(item.title ?? "name")")
@@ -72,7 +72,7 @@ struct ListView: View {
                 Section {
                     ForEach(previousItems) { item in
                         NavigationLink {
-                            Text(item.timestamp!, formatter: itemFormatter)
+                            Text(item.timestamp!, formatter: Date.itemFormatter)
                         } label: {
                             HStack {
                                 Text("\(item.title ?? "name")")
@@ -118,9 +118,4 @@ struct ListView: View {
 }
 
 
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
+
