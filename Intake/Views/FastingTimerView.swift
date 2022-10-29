@@ -10,6 +10,7 @@ import SwiftUI
 struct FastingTimerView: View {
     
     @EnvironmentObject var fastingTimer: FastingTimerManager
+    @Environment(\.scenePhase) private var scenePhase
     
     @FetchRequest(fetchRequest: Item.fetchLastItem) private var lastItem: FetchedResults<Item>
     
@@ -36,7 +37,9 @@ struct FastingTimerView: View {
                 .frame(width: 300, height: 200)
                 .background(.ultraThinMaterial)
                 .cornerRadius(30)
-                .onAppear(perform: calculateTimeSince)
+                .onChange(of: scenePhase) { _ in
+                    calculateTimeSince()
+                }
         }
     }
     
