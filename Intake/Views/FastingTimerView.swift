@@ -20,13 +20,16 @@ struct FastingTimerView: View {
                 Text("Fasting Since")
                     .font(.title)
                     .foregroundColor(.secondary)
-                Text(lastItem[0].timestamp ?? Date(), formatter: Date.itemFormatter)
+                if lastItem[0] != nil {
+                    Text(lastItem[0].timestamp ?? Date(), formatter: Date.itemFormatter)
+                }
                 Spacer()
                     .frame(height: 20)
                 Text("\(fastingTimer.hoursElapsed) hours")
                     .font(.largeTitle)
                 Text("\(fastingTimer.minutesElapsed) minutes")
                     .foregroundColor(.secondary)
+                Text("\(fastingTimer.secondsElapsed)")
                 Spacer()
                     .frame(height: 50)
                 }
@@ -40,11 +43,11 @@ struct FastingTimerView: View {
     private func calculateTimeSince() {
         let startDate = lastItem[0].timestamp ?? Date()
         
-        let diffComponents = Calendar.current.dateComponents([.minute], from: startDate, to: Date())
-        let minutesSinceStart = diffComponents.minute
-        print(minutesSinceStart)
+        let diffComponents = Calendar.current.dateComponents([.second], from: startDate, to: Date())
+        let secondsSinceStart = diffComponents.second
         
-        fastingTimer.minutesElapsed = minutesSinceStart ?? 0
+        fastingTimer.totalSecondsElapsed = secondsSinceStart ?? 0
+        fastingTimer.resumeFast()
     }
     
 }
