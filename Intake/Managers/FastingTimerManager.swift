@@ -9,27 +9,44 @@ import Foundation
 
 final class FastingTimerManager: ObservableObject {
     
-    var totalMinutesElapsed = 0 {
+    var totalSecondsElapsed: Int = 0 {
         didSet {
-            if totalMinutesElapsed >= 60 {
-                hoursElapsed = totalMinutesElapsed / 60
-                minutesElapsed = totalMinutesElapsed % 60
+            if totalSecondsElapsed >= 3600 {
+                hoursElapsed = totalSecondsElapsed / 3600
+                minutesElapsed = (totalSecondsElapsed % 3600) / 60
+                secondsElapsed = (totalSecondsElapsed % 3600) % 60
+            } else if totalSecondsElapsed >= 60 {
+                minutesElapsed = totalSecondsElapsed / 60
+                secondsElapsed = totalSecondsElapsed % 60
             } else {
-                minutesElapsed = totalMinutesElapsed
+                secondsElapsed = totalSecondsElapsed
             }
         }
     }
     
-    @Published var minutesElapsed = 0
-    @Published var hoursElapsed = 0
-    @Published var daysElapsed = 0
+    @Published var minutesElapsed: Int = 0
+    @Published var hoursElapsed: Int = 0
+    @Published var daysElapsed: Int = 0
+    @Published var secondsElapsed: Int = 0
     
     var timer = Timer()
     
     func startFast() {
         timer.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { timer in
-            self.totalMinutesElapsed += 1
+        totalSecondsElapsed = 0
+        minutesElapsed = 0
+        hoursElapsed = 0
+        daysElapsed = 0
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            self.totalSecondsElapsed += 1
         }
     }
+    
+    func resumeFast() {
+        timer.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            self.totalSecondsElapsed += 1
+        }
+    }
+    
 }
