@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct FastingTimerView: View {
-    
     @EnvironmentObject var fastingTimer: FastingTimerManager
     @Environment(\.scenePhase) private var scenePhase
     
     @FetchRequest(fetchRequest: Item.fetchLastItem) private var lastItem: FetchedResults<Item>
+    
+    private var didChange = NotificationCenter.default.publisher(for: .NSManagedObjectContextObjectsDidChange)
     
     var body: some View {
         VStack(spacing: 18) {
@@ -21,7 +22,7 @@ struct FastingTimerView: View {
                 Text("Fasting Since")
                     .font(.title)
                     .foregroundColor(.secondary)
-                if lastItem[0] != nil {
+                if !lastItem.isEmpty {
                     Text(lastItem[0].timestamp ?? Date(), formatter: Date.itemFormatter)
                 }
                 Spacer()
@@ -33,18 +34,25 @@ struct FastingTimerView: View {
                 Text("\(fastingTimer.secondsElapsed)")
                 Spacer()
                     .frame(height: 50)
-                }
-                .frame(width: 300, height: 200)
-                .background(.ultraThinMaterial)
-                .cornerRadius(30)
-                .onChange(of: scenePhase) { _ in
-                    calculateTimeSince()
-                }
+            }
+            .frame(width: 300, height: 200)
+            .background(.ultraThinMaterial)
+            .cornerRadius(30)
+            .onChange(of: scenePhase) { _ in
+                calculateTimeSince()
+            }
         }
     }
     
+     
     private func calculateTimeSince() {
-        let startDate = lastItem[0].timestamp ?? Date()
+        var startDate: Date
+        
+        if !lastItem.isEmpty {
+            startDate = lastItem[0].timestamp ?? Date()
+        } else {
+            startDate = Date()
+        }
         
         let diffComponents = Calendar.current.dateComponents([.second], from: startDate, to: Date())
         let secondsSinceStart = diffComponents.second
