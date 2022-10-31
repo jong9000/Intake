@@ -41,6 +41,7 @@ struct FastingTimerView: View {
             .onChange(of: scenePhase) { _ in
                 calculateTimeSince()
             }
+            .onAppear(perform: calculateTimeSince)
         }
     }
     
