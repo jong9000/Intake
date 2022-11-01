@@ -70,7 +70,14 @@ struct AddView: View {
         withAnimation {
             let newItem = Item(context: viewContext)
             newItem.timestamp = Date()
-            newItem.calories = Int16(servings * (Int(calories) ?? 0))
+            newItem.calories =  {
+                let subtotal = servings * (Int(calories) ?? 0)
+                if subtotal > 32766 {
+                    return Int16.max
+                } else {
+                    return Int16(subtotal)
+                }
+            }()
             newItem.title = name
             
             do {

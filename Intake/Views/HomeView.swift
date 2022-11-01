@@ -53,9 +53,9 @@ animation: .default)
     }
     
     private func totalCaloriesForItems(in itemResult: FetchedResults<Item>) -> String {
-        var totalCalories: Int16 = 0
+        var totalCalories = 0
         for item in itemResult {
-            totalCalories += item.calories
+            totalCalories += Int(item.calories)
         }
         return "\(totalCalories)"
     }
