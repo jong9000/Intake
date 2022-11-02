@@ -47,19 +47,21 @@ struct AddView: View {
                 Section {
                     Text("Total calories: \(servings * (Int(calories) ?? 0))")
                 }
-                HStack {
-                    Spacer()
-                    Button("Submit") {
-                        addItem()
-                        
-                        name = ""
-                        calories = ""
-                        servings = 1
-                        focusedField = nil
-                        
+                Section {
+                    HStack {
+                        Spacer()
+                        Button("Submit") {
+                            addItem()
+                            
+                            name = ""
+                            calories = ""
+                            servings = 1
+                            focusedField = nil
+                            
+                        }
+                        .buttonStyle(.borderedProminent)
+                        Spacer()
                     }
-                    .buttonStyle(.borderedProminent)
-                    Spacer()
                 }
             }
             .navigationTitle("Add")
