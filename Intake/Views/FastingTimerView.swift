@@ -13,7 +13,7 @@ struct FastingTimerView: View {
     
     @FetchRequest(fetchRequest: Item.fetchLastItem) private var lastItem: FetchedResults<Item>
     
-    private var didChange = NotificationCenter.default.publisher(for: .NSManagedObjectContextObjectsDidChange)
+    private var didChange = NotificationCenter.default.publisher(for: .NSManagedObjectContextDidSave)
     
     var body: some View {
         VStack(spacing: 18) {
