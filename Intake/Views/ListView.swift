@@ -12,87 +12,51 @@ struct ListView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @FetchRequest(
-                sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: false)],
-                predicate: NSPredicate(format: "timestamp > %@", UserCalendar().startOfDay as NSDate),
-                  animation: .default)
-    private var todaysItems: FetchedResults<Item>
+        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: false)],
+        predicate: nil,
+        animation: .default)
+    private var allItems: FetchedResults<Item>
     
-    @FetchRequest(
-                sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: false)],
-                predicate: NSPredicate(format: "timestamp >= %@ && timestamp < %@", UserCalendar().startOfYesterday as NSDate, UserCalendar().startOfDay as NSDate),
-                  animation: .default)
-    private var yesterdaysItems: FetchedResults<Item>
+    @State private var searchIntakeTitle = ""
     
-    @FetchRequest(
-                sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: false)],
-                predicate: NSPredicate(format: "timestamp < %@", UserCalendar().startOfYesterday as NSDate),
-                  animation: .default)
-    private var previousItems: FetchedResults<Item>
+    var filteredItems: [Item] {
+        
+        let allItemsArray = allItems.compactMap{$0}
+        
+        if searchIntakeTitle.isEmpty {
+            return allItemsArray
+        } else {
+            return allItemsArray.filter { $0.title?.localizedCaseInsensitiveContains(searchIntakeTitle) ?? false }
+        }
+    }
     
     var body: some View {
         NavigationView {
             List {
-                Section {
-                    ForEach(todaysItems) { item in
-                        
-                        NavigationLink {
-                            Text(item.timestamp!, formatter: Date.itemFormatter)
-                        } label: {
-                            HStack {
-                                Text("\(item.title ?? "name")")
-                                Spacer()
-                                Text(String(item.calories))
-                                    .foregroundColor(.red)
-                            }
+                ForEach(filteredItems) { item in
+                    
+                    NavigationLink {
+                        Text(item.timestamp!, formatter: Date.itemFormatter)
+                    } label: {
+                        HStack {
+                            Text("\(item.title ?? "name")")
+                            Spacer()
+                            Text(String(item.calories))
+                                .foregroundColor(.red)
                         }
                     }
-                    .onDelete(perform: deleteItems)
-
-                } header: {
-                    Text("Today")
                 }
+                .onDelete(perform: deleteItems)
                 
-                Section {
-                    ForEach(yesterdaysItems) { item in
-                        NavigationLink {
-                            Text(item.timestamp!, formatter: Date.itemFormatter)
-                        } label: {
-                            HStack {
-                                Text("\(item.title ?? "name")")
-                                Spacer()
-                                Text(String(item.calories))
-                                    .foregroundColor(.red)
-                            }
-                        }
-                    }
-                } header: {
-                    Text("Yesterday")
-                }
-                
-                Section {
-                    ForEach(previousItems) { item in
-                        NavigationLink {
-                            Text(item.timestamp!, formatter: Date.itemFormatter)
-                        } label: {
-                            HStack {
-                                Text("\(item.title ?? "name")")
-                                Spacer()
-                                Text(String(item.calories))
-                                    .foregroundColor(.red)
-                            }
-                        }
-                    }
-                } header: {
-                    Text("Previous")
-                }
             }
             .navigationTitle("List")
+            .searchable(text: $searchIntakeTitle)
         }
     }
     
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
-            offsets.map { todaysItems[$0] }.forEach(viewContext.delete)
+            offsets.map { allItems[$0] }.forEach(viewContext.delete)
             
             do {
                 try viewContext.save()
